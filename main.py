@@ -43,6 +43,7 @@ if __name__ == '__main__':
                     persons.append(Person(datetime.now(), faceEncoding, scaledImage[y1:y2, x1:x2]))
 
         print(len(persons))
+        utils.show_images(persons)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
