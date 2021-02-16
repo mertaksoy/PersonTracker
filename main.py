@@ -4,10 +4,10 @@ import cv2
 import face_recognition
 from datetime import datetime
 import numpy as np
+import utils
 
 cam = Camera(640, 480)
 persons = []
-knownFaceEncodings = []
 
 if __name__ == '__main__':
 
@@ -22,12 +22,13 @@ if __name__ == '__main__':
         if len(faceEncodings) == 0:
             continue
 
-        if len(knownFaceEncodings) == 0 & len(persons) == 0:
-            for faceEncoding in faceEncodings:
-                persons.append(Person(datetime.now()))
-                knownFaceEncodings.append(faceEncoding)
+        if len(persons) == 0:
+            for faceEncoding, faceLocation in zip(faceEncodings, faceLocations):
+                y1, x2, y2, x1 = faceLocation
+                persons.append(Person(datetime.now(), faceEncoding, scaledImage[y1:y2, x1:x2]))
         else:
             for faceEncoding, faceLocation in zip(faceEncodings, faceLocations):
+                knownFaceEncodings = utils.extract_encoded_faces(persons)
                 matches = face_recognition.compare_faces(knownFaceEncodings, faceEncoding)
                 faceDis = face_recognition.face_distance(knownFaceEncodings, faceEncoding)
 
@@ -38,11 +39,10 @@ if __name__ == '__main__':
                     # nothing to do yet
                 else:
                     print('not matched')
-                    persons.append(Person(datetime.now()))
-                    knownFaceEncodings.append(faceEncoding)
+                    y1, x2, y2, x1 = faceLocation
+                    persons.append(Person(datetime.now(), faceEncoding, scaledImage[y1:y2, x1:x2]))
 
         print(len(persons))
-        print(len(knownFaceEncodings))
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
