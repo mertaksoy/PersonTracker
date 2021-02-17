@@ -44,6 +44,8 @@ def stack_images(scale, img_array):
 
 
 def show_images(persons):
+    if len(persons) == 0:
+        return
     images = []
     for person in persons:
         images.append(person.image)

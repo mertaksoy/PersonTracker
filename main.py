@@ -19,14 +19,11 @@ if __name__ == '__main__':
         faceLocations = face_recognition.face_locations(scaledImage)
         faceEncodings = face_recognition.face_encodings(scaledImage, faceLocations)
 
-        if len(faceEncodings) == 0:
-            continue
-
-        if len(persons) == 0:
+        if len(persons) == 0 and len(faceEncodings) > 0:
             for faceEncoding, faceLocation in zip(faceEncodings, faceLocations):
                 y1, x2, y2, x1 = faceLocation
                 persons.append(Person(datetime.now(), faceEncoding, scaledImage[y1:y2, x1:x2]))
-        else:
+        elif len(faceEncodings) > 0:
             for faceEncoding, faceLocation in zip(faceEncodings, faceLocations):
                 knownFaceEncodings = utils.extract_encoded_faces(persons)
                 matches = face_recognition.compare_faces(knownFaceEncodings, faceEncoding)
