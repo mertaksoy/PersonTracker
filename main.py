@@ -5,19 +5,17 @@ import face_recognition
 from datetime import datetime
 import numpy as np
 import utils
+from itertools import compress
 
 cam = Camera(640, 480)
 persons = []
 
 
-def clean_persons(face_matches, face_dis):
-    previous_match = False
-    for index in range(len(face_matches)):
-        if face_matches[index] and previous_match:
-            similarity = abs(face_dis[index] - face_dis[index - 1])
-            if similarity < 0.05:
-                persons.remove(persons[index])
-        previous_match = face_matches[index]
+def remove_similar_faces(face_matches):
+    index_of_similar_faces = list(compress(range(len(face_matches)), face_matches))
+    n_of_similar_faces = len(index_of_similar_faces)
+    if n_of_similar_faces > 1:
+        persons.remove(persons[index_of_similar_faces[n_of_similar_faces - 1]])
 
 
 if __name__ == '__main__':
@@ -40,18 +38,17 @@ if __name__ == '__main__':
                 matches = face_recognition.compare_faces(knownFaceEncodings, faceEncoding)
                 faceDis = face_recognition.face_distance(knownFaceEncodings, faceEncoding)
 
-                clean_persons(matches, faceDis)
+                remove_similar_faces(matches)
                 matchIndex = np.argmin(faceDis)
 
                 if matches[matchIndex]:
                     print('matched')
                     # nothing to do yet
                 else:
-                    print('not matched')
                     y1, x2, y2, x1 = faceLocation
                     persons.append(Person(datetime.now(), faceEncoding, scaledImage[y1:y2, x1:x2]))
 
-        print(len(persons))
+        print('persons: ' + str(len(persons)))
         utils.show_images(persons)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
