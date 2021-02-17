@@ -49,5 +49,4 @@ def show_images(persons):
     images = []
     for person in persons:
         images.append(cv2.cvtColor(person.image, cv2.COLOR_RGB2BGR))
-    img_stack = stack_images(0.5, images)
-    cv2.imshow("Persons", img_stack)
+    cv2.imshow("Persons", stack_images(0.5, images))
