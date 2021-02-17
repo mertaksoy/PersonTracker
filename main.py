@@ -9,6 +9,17 @@ import utils
 cam = Camera(640, 480)
 persons = []
 
+
+def clean_persons(face_matches, face_dis):
+    previous_match = False
+    for index in range(len(face_matches)):
+        if face_matches[index] and previous_match:
+            similarity = abs(face_dis[index] - face_dis[index - 1])
+            if similarity < 0.05:
+                persons.remove(persons[index])
+        previous_match = face_matches[index]
+
+
 if __name__ == '__main__':
 
     while True:
@@ -29,6 +40,7 @@ if __name__ == '__main__':
                 matches = face_recognition.compare_faces(knownFaceEncodings, faceEncoding)
                 faceDis = face_recognition.face_distance(knownFaceEncodings, faceEncoding)
 
+                clean_persons(matches, faceDis)
                 matchIndex = np.argmin(faceDis)
 
                 if matches[matchIndex]:
