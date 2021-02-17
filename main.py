@@ -28,22 +28,19 @@ if __name__ == '__main__':
         faceLocations = face_recognition.face_locations(scaledImage)
         faceEncodings = face_recognition.face_encodings(scaledImage, faceLocations)
 
-        if len(persons) == 0 and len(faceEncodings) > 0:
-            for faceEncoding, faceLocation in zip(faceEncodings, faceLocations):
-                y1, x2, y2, x1 = faceLocation
+        for faceEncoding, faceLocation in zip(faceEncodings, faceLocations):
+            y1, x2, y2, x1 = faceLocation
+            if len(persons) == 0 and len(faceEncodings) > 0:
                 persons.append(Person(datetime.now(), None, faceEncoding, scaledImage[y1:y2, x1:x2]))
-        elif len(faceEncodings) > 0:
-            for faceEncoding, faceLocation in zip(faceEncodings, faceLocations):
+            elif len(faceEncodings) > 0:
                 knownFaceEncodings = utils.extract_encoded_faces(persons)
                 matches = face_recognition.compare_faces(knownFaceEncodings, faceEncoding)
                 faceDis = face_recognition.face_distance(knownFaceEncodings, faceEncoding)
 
                 matchIndex = np.argmin(faceDis)
-
                 if matches[matchIndex]:
                     persons[matchIndex].last_seen = datetime.now()
                 else:
-                    y1, x2, y2, x1 = faceLocation
                     persons.append(Person(datetime.now(), None, faceEncoding, scaledImage[y1:y2, x1:x2]))
                 remove_similar_faces(matches)
 
