@@ -15,7 +15,12 @@ def remove_similar_faces(face_matches):
     index_of_similar_faces = list(compress(range(len(face_matches)), face_matches))
     n_of_similar_faces = len(index_of_similar_faces)
     if n_of_similar_faces > 1:
-        persons.remove(persons[index_of_similar_faces[n_of_similar_faces - 1]])
+        position_to_remove = index_of_similar_faces[n_of_similar_faces - 1]
+        persons.remove(persons[position_to_remove])
+        face_matches.remove(face_matches[position_to_remove])
+        remove_similar_faces(face_matches)
+    else:
+        return
 
 
 if __name__ == '__main__':
