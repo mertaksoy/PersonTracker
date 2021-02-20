@@ -1,8 +1,8 @@
 import face_recognition
 from itertools import compress
 import numpy as np
-import person
-import utils
+import src.person as person
+import src.utils as utils
 
 
 class PersonTracker:
