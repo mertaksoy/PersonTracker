@@ -19,7 +19,7 @@ class TestUtils(unittest.TestCase):
 
     @patch('person_tracker.utils.cv2.imshow')
     @patch('person_tracker.utils.cv2.cvtColor')
-    def test_show_images_with_empty_persons(self,cv2_cvtColor_mock, cv2_imshow_mock):
+    def test_show_images_with_empty_persons(self, cv2_cvtColor_mock, cv2_imshow_mock):
         persons = []
         utils.show_images(persons)
 
