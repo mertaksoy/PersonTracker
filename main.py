@@ -1,7 +1,7 @@
-from src.camera import Camera
-from src.logic import PersonTracker
+from person_tracker.camera import Camera
+from person_tracker.logic import PersonTracker
 import cv2
-import src.utils as utils
+import person_tracker.utils as utils
 
 if __name__ == '__main__':
     persons = []
