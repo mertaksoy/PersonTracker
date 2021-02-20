@@ -7,8 +7,10 @@ class Camera:
         self.capture.set(3, width)
         self.capture.set(4, height)
 
-    def read(self):
+    def read(self, display=False):
         success, img = self.capture.read()
+        if display:
+            cv2.imshow('Camera', img)
         return img
 
     @staticmethod

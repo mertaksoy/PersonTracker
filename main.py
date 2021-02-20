@@ -26,8 +26,7 @@ def remove_similar_faces(face_matches):
 if __name__ == '__main__':
 
     while True:
-        image = cam.read()
-        cv2.imshow("Camera", image)
+        image = cam.read(display=True)
         scaledImage = Camera.scale_down(image)
 
         faceLocations = face_recognition.face_locations(scaledImage)
