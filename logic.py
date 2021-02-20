@@ -1,8 +1,7 @@
 import face_recognition
 from itertools import compress
 import numpy as np
-from datetime import datetime
-from person import Person
+import person
 import utils
 
 
@@ -16,13 +15,13 @@ class PersonTracker:
         for faceEncoding, faceLocation in zip(face_encodings, face_locations):
             y1, x2, y2, x1 = faceLocation
             if len(self.persons) == 0 and len(face_encodings) > 0:
-                self.persons.append(Person(datetime.now(), None, faceEncoding, scaled_image[y1:y2, x1:x2]))
+                person.create(faceEncoding, scaled_image[y1:y2, x1:x2], self.persons)
             elif len(face_encodings) > 0:
                 matches, match_index = self.__recognize_face(utils.extract_encoded_faces(self.persons), faceEncoding)
                 if matches[match_index]:
-                    self.persons[match_index].last_seen = datetime.now()
+                    self.persons[match_index].recognized()
                 else:
-                    self.persons.append(Person(datetime.now(), None, faceEncoding, scaled_image[y1:y2, x1:x2]))
+                    person.create(faceEncoding, scaled_image[y1:y2, x1:x2], self.persons)
                 self.__remove_similar_faces(matches)
 
     def __detect_faces(self, scaled_image):
